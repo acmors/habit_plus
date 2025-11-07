@@ -43,4 +43,12 @@ public class IncomeDTO {
     public void setIncomeValue(double incomeValue) {
         this.incomeValue = incomeValue;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }

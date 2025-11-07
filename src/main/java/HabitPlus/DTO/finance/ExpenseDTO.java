@@ -43,4 +43,12 @@ public class ExpenseDTO {
     public void setExpenseName(String expenseName) {
         this.expenseName = expenseName;
     }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
