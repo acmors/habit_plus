@@ -1,5 +1,6 @@
 package HabitPlus.service.finance;
 import HabitPlus.DTO.finance.IncomeDTO;
+import HabitPlus.controllers.finance.IncomeController;
 import HabitPlus.model.finance.IncomeEntity;
 import HabitPlus.repository.finance.IncomeRepository;
 import org.slf4j.Logger;
@@ -10,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 import static HabitPlus.mapper.finance.IncomeMapper.parseListHabits;
 import static HabitPlus.mapper.finance.IncomeMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class IncomeService {
@@ -24,7 +27,9 @@ public class IncomeService {
         logger.info("Creating a Income!");
 
         var entity = parseObject(income, IncomeEntity.class);
-        return parseObject(repository.save(entity), IncomeDTO.class);
+        var dto =  parseObject(repository.save(entity), IncomeDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public IncomeDTO update(IncomeDTO income){
@@ -37,7 +42,9 @@ public class IncomeService {
         entity.setIncomeDescription(income.getIncomeDescription());
         entity.setIncomeCategory(income.getIncomeCategory());
         entity.setIncomeValue(income.getIncomeValue());
-        return parseObject(repository.save(entity), IncomeDTO.class);
+        var dto =  parseObject(repository.save(entity), IncomeDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public IncomeDTO findById(Long id){
@@ -46,7 +53,9 @@ public class IncomeService {
 
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No records found."));
-        return parseObject(entity, IncomeDTO.class);
+        var dto =  parseObject(entity, IncomeDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public List<IncomeDTO> findAll(){
@@ -54,7 +63,9 @@ public class IncomeService {
         logger.info("Finding all Incomes!");
 
         List<IncomeDTO> habits = new ArrayList<IncomeDTO>();
-        return parseListHabits(repository.findAll(), IncomeDTO.class);
+        var dto = parseListHabits(repository.findAll(), IncomeDTO.class);
+        dto.forEach(this::addHateoasLinks);
+        return dto;
     }
     
     public void delete(Long id){
@@ -65,6 +76,14 @@ public class IncomeService {
                 .orElseThrow(() -> new RuntimeException("No records found."));
 
         repository.delete(entity);
+    }
+
+    private void addHateoasLinks(IncomeDTO dto) {
+        dto.add(linkTo(methodOn(IncomeController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(IncomeController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
+        dto.add(linkTo(methodOn(IncomeController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(IncomeController.class).create(dto)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(IncomeController.class).update(dto)).withRel("update").withType("PUT"));
     }
 
 

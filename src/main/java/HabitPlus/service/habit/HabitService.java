@@ -58,6 +58,7 @@ public class HabitService {
         var dto = parseObject(entity, HabitDTO.class);
         addHateoasLinks(dto);
         return dto;
+
     }
 
     public List<HabitDTO> findAll(){

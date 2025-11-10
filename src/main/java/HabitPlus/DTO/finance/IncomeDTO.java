@@ -1,6 +1,8 @@
 package HabitPlus.DTO.finance;
 
-public class IncomeDTO {
+import org.springframework.hateoas.RepresentationModel;
+
+public class IncomeDTO extends RepresentationModel<IncomeDTO> {
 
 
     private Long id;

@@ -1,5 +1,4 @@
 package HabitPlus.model.finance;
-
 import jakarta.persistence.*;
 
 @Entity

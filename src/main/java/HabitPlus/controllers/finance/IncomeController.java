@@ -4,12 +4,13 @@ import HabitPlus.DTO.finance.IncomeDTO;
 import HabitPlus.service.finance.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/habits/v1")
+@RequestMapping("/api/income/v1")
 public class IncomeController {
 
     @Autowired
@@ -36,8 +37,9 @@ public class IncomeController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

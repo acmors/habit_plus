@@ -1,10 +1,8 @@
 package HabitPlus.service.finance;
 import HabitPlus.DTO.finance.ExpenseDTO;
-import HabitPlus.DTO.finance.ExpenseDTO;
+import HabitPlus.controllers.finance.ExpenseController;
 import HabitPlus.model.finance.ExpenseEntity;
-import HabitPlus.model.finance.IncomeEntity;
 import HabitPlus.repository.finance.ExpenseRepository;
-import HabitPlus.repository.finance.IncomeRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +13,8 @@ import java.util.List;
 
 import static HabitPlus.mapper.finance.IncomeMapper.parseListHabits;
 import static HabitPlus.mapper.finance.IncomeMapper.parseObject;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Service
 public class ExpenseService {
@@ -29,7 +29,9 @@ public class ExpenseService {
         logger.info("Creating a Expense!");
 
         var entity = parseObject(expense, ExpenseEntity.class);
-        return parseObject(repository.save(entity), ExpenseDTO.class);
+        var dto = parseObject(repository.save(entity), ExpenseDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public ExpenseDTO update(ExpenseDTO expense){
@@ -42,7 +44,9 @@ public class ExpenseService {
         entity.setExpenseDescription(expense.getExpenseDescription());
         entity.setExpenseCategory(expense.getExpenseCategory());
         entity.setExpenseValue(expense.getExpenseValue());
-        return parseObject(repository.save(entity), ExpenseDTO.class);
+        var dto = parseObject(repository.save(entity), ExpenseDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public ExpenseDTO findById(Long id){
@@ -51,7 +55,9 @@ public class ExpenseService {
 
         var entity = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("No records found."));
-        return parseObject(entity, ExpenseDTO.class);
+        var dto = parseObject(entity, ExpenseDTO.class);
+        addHateoasLinks(dto);
+        return dto;
     }
 
     public List<ExpenseDTO> findAll(){
@@ -59,7 +65,9 @@ public class ExpenseService {
         logger.info("Finding all Expense!");
 
         List<ExpenseDTO> habits = new ArrayList<ExpenseDTO>();
-        return parseListHabits(repository.findAll(), ExpenseDTO.class);
+        var dto = parseListHabits(repository.findAll(), ExpenseDTO.class);
+        dto.forEach(this::addHateoasLinks);
+        return dto;
     }
     
     public void delete(Long id){
@@ -70,6 +78,15 @@ public class ExpenseService {
                 .orElseThrow(() -> new RuntimeException("No records found."));
 
         repository.delete(entity);
+
+    }
+
+    private void addHateoasLinks(ExpenseDTO dto) {
+        dto.add(linkTo(methodOn(ExpenseController.class).findById(dto.getId())).withSelfRel().withType("GET"));
+        dto.add(linkTo(methodOn(ExpenseController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
+        dto.add(linkTo(methodOn(ExpenseController.class).findAll()).withRel("findAll").withType("GET"));
+        dto.add(linkTo(methodOn(ExpenseController.class).create(dto)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(ExpenseController.class).update(dto)).withRel("update").withType("PUT"));
     }
 
 
