@@ -4,6 +4,7 @@ import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.service.habit.HabitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -36,8 +37,9 @@ public class HabitController {
     }
 
     @DeleteMapping(value = "/{id}")
-    public void delete(@PathVariable("id") Long id){
+    public ResponseEntity<?> delete(@PathVariable("id") Long id){
         service.delete(id);
+        return ResponseEntity.noContent().build();
     }
 
 }

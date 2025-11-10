@@ -1,8 +1,10 @@
 package HabitPlus.DTO.habit;
 
+import org.springframework.hateoas.RepresentationModel;
+
 import java.util.Date;
 
-public class HabitDTO {
+public class HabitDTO extends RepresentationModel<HabitDTO> {
 
 
     private Long id;
