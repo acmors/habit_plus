@@ -4,11 +4,11 @@ spring:
   datasource:
     drive-class-name: org.postgresql.Driver
     url: jdbc:postgresql://localhost:5432/habitplus?useTimezone=true&serverTimezone=UTC
-    username: postgres
-    password: pass
+    username: 
+    password:
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: update
     properties:
       hibernate:
     show-sql: false
