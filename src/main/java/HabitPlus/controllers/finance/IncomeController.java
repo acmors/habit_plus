@@ -17,7 +17,7 @@ public class IncomeController {
     private IncomeService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public IncomeDTO create(IncomeDTO income){
+    public IncomeDTO create(@RequestBody IncomeDTO income){
         return service.create(income);
     }
 

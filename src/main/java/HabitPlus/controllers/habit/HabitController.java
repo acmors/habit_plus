@@ -17,7 +17,7 @@ public class HabitController {
     private HabitService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public HabitDTO create(HabitDTO habit){
+    public HabitDTO create(@RequestBody HabitDTO habit){
         return service.create(habit);
     }
 

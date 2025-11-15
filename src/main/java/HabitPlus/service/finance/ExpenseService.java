@@ -1,16 +1,16 @@
 package HabitPlus.service.finance;
 import HabitPlus.DTO.finance.ExpenseDTO;
 import HabitPlus.controllers.finance.ExpenseController;
+import HabitPlus.exceptions.BadRequestException;
+import HabitPlus.exceptions.ObjectNotFoundException;
 import HabitPlus.model.finance.ExpenseEntity;
 import HabitPlus.repository.finance.ExpenseRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.ArrayList;
 import java.util.List;
-
 import static HabitPlus.mapper.finance.IncomeMapper.parseListHabits;
 import static HabitPlus.mapper.finance.IncomeMapper.parseObject;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
@@ -28,6 +28,10 @@ public class ExpenseService {
 
         logger.info("Creating a Expense!");
 
+        if (expense.getExpenseName() == null || expense.getExpenseName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
+
         var entity = parseObject(expense, ExpenseEntity.class);
         var dto = parseObject(repository.save(entity), ExpenseDTO.class);
         addHateoasLinks(dto);
@@ -37,9 +41,12 @@ public class ExpenseService {
     public ExpenseDTO update(ExpenseDTO expense){
 
         logger.info("Updating a Expense!");
+        if (expense.getExpenseName() == null || expense.getExpenseName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
 
         ExpenseEntity entity = repository.findById(expense.getId())
-                .orElseThrow(() -> new RuntimeException("No records found"));
+                .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
         entity.setExpenseName(expense.getExpenseName());
         entity.setExpenseDescription(expense.getExpenseDescription());
         entity.setExpenseCategory(expense.getExpenseCategory());
@@ -54,7 +61,7 @@ public class ExpenseService {
         logger.info("Finding a Expense!");
 
         var entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
         var dto = parseObject(entity, ExpenseDTO.class);
         addHateoasLinks(dto);
         return dto;
@@ -75,7 +82,7 @@ public class ExpenseService {
         logger.info("Deleting a Expense!");
 
         ExpenseEntity entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
 
         repository.delete(entity);
 

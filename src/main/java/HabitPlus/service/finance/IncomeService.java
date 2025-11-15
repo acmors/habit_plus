@@ -1,6 +1,8 @@
 package HabitPlus.service.finance;
 import HabitPlus.DTO.finance.IncomeDTO;
 import HabitPlus.controllers.finance.IncomeController;
+import HabitPlus.exceptions.BadRequestException;
+import HabitPlus.exceptions.ObjectNotFoundException;
 import HabitPlus.model.finance.IncomeEntity;
 import HabitPlus.repository.finance.IncomeRepository;
 import org.slf4j.Logger;
@@ -25,6 +27,9 @@ public class IncomeService {
     public IncomeDTO create(IncomeDTO income){
 
         logger.info("Creating a Income!");
+        if (income.getIncomeName() == null || income.getIncomeName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
 
         var entity = parseObject(income, IncomeEntity.class);
         var dto =  parseObject(repository.save(entity), IncomeDTO.class);
@@ -35,9 +40,12 @@ public class IncomeService {
     public IncomeDTO update(IncomeDTO income){
 
         logger.info("Updating a Income!");
+        if (income.getIncomeName() == null || income.getIncomeName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
 
         IncomeEntity entity = repository.findById(income.getId())
-                .orElseThrow(() -> new RuntimeException("No records found"));
+                .orElseThrow(() -> new ObjectNotFoundException("Income not found"));
         entity.setIncomeName(income.getIncomeName());
         entity.setIncomeDescription(income.getIncomeDescription());
         entity.setIncomeCategory(income.getIncomeCategory());
@@ -52,7 +60,7 @@ public class IncomeService {
         logger.info("Finding a Income!");
 
         var entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("Income not found"));
         var dto =  parseObject(entity, IncomeDTO.class);
         addHateoasLinks(dto);
         return dto;
@@ -73,7 +81,7 @@ public class IncomeService {
         logger.info("Deleting a Income!");
 
         IncomeEntity entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("Income not found"));
 
         repository.delete(entity);
     }

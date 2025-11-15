@@ -4,6 +4,9 @@ import static HabitPlus.mapper.habit.HabitMapper.parseObject;
 import static HabitPlus.mapper.habit.HabitMapper.parseListHabits;
 
 import HabitPlus.controllers.habit.HabitController;
+import HabitPlus.exceptions.BadRequestException;
+import HabitPlus.exceptions.ConflictException;
+import HabitPlus.exceptions.ObjectNotFoundException;
 import HabitPlus.model.habit.HabitEntity;
 import HabitPlus.repository.habit.HabitRepository;
 import org.slf4j.Logger;
@@ -27,6 +30,13 @@ public class HabitService {
     public HabitDTO create(HabitDTO habit){
 
         logger.info("Creating a Habit!");
+        if (habit.getName() == null || habit.getName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
+
+        if (repository.existsByName(habit.getName())) {
+            throw new ConflictException("Habit already exists");
+        }
 
         var entity = parseObject(habit, HabitEntity.class);
         var dto = parseObject(repository.save(entity), HabitDTO.class);
@@ -38,8 +48,12 @@ public class HabitService {
 
         logger.info("Updating a Habit!");
 
+        if (habit.getName() == null || habit.getName().isBlank()) {
+            throw new BadRequestException("Habit name cannot be empty");
+        }
+
         HabitEntity entity = repository.findById(habit.getId())
-                .orElseThrow(() -> new RuntimeException("No records found"));
+                .orElseThrow(() -> new ObjectNotFoundException("No records found"));
         entity.setName(habit.getName());
         entity.setDescription(habit.getDescription());
         entity.setPriority(habit.getPriority());
@@ -54,7 +68,7 @@ public class HabitService {
         logger.info("Finding a Habit!");
 
         var entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("No records found."));
         var dto = parseObject(entity, HabitDTO.class);
         addHateoasLinks(dto);
         return dto;
@@ -76,7 +90,7 @@ public class HabitService {
         logger.info("Deleting a Habit!");
 
         HabitEntity entity = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("No records found."));
+                .orElseThrow(() -> new ObjectNotFoundException("No records found."));
 
         repository.delete(entity);
     }

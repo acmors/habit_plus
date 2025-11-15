@@ -2,6 +2,7 @@ package HabitPlus.DTO.habit;
 
 import org.springframework.hateoas.RepresentationModel;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 public class HabitDTO extends RepresentationModel<HabitDTO> {
@@ -11,7 +12,7 @@ public class HabitDTO extends RepresentationModel<HabitDTO> {
     private String name;
     private String priority;
     private String description;
-    private Date date;
+    private LocalDate date;
 
     public HabitDTO() {
     }
@@ -48,11 +49,11 @@ public class HabitDTO extends RepresentationModel<HabitDTO> {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }

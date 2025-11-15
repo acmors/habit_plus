@@ -1,7 +1,9 @@
 package HabitPlus.model.habit;
 
 import jakarta.persistence.*;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.time.LocalDate;
 import java.util.Date;
 
 @Entity
@@ -12,17 +14,17 @@ public class HabitEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "habit_name", nullable = false,length = 80)
+    @Column(name = "habit_name",length = 80)
     private String name;
 
-    @Column(name = "habit_priority", nullable = false,length = 8)
+    @Column(name = "habit_priority",length = 8)
     private String priority;
 
-    @Column(name = "habit_description", nullable = false,length = 100)
+    @Column(name = "habit_description",length = 100)
     private String description;
 
-    @Column(name = "habit_date", nullable = false)
-    private Date date;
+    @Column(name = "habit_date")
+    private LocalDate date;
 
     public HabitEntity() {
     }
@@ -59,11 +61,11 @@ public class HabitEntity {
         this.description = description;
     }
 
-    public Date getDate() {
+    public LocalDate getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(LocalDate date) {
         this.date = date;
     }
 }
