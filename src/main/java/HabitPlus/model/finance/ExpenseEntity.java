@@ -1,5 +1,7 @@
 package HabitPlus.model.finance;
 
+import HabitPlus.model.security.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
 @Entity
@@ -22,31 +24,20 @@ public class ExpenseEntity {
     @Column(name = "tb_value")
     private double expenseValue;
 
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
+
     public ExpenseEntity() {
     }
 
-    public double getExpenseValue() {
-        return expenseValue;
+    public Long getId() {
+        return id;
     }
 
-    public void setExpenseValue(double expenseValue) {
-        this.expenseValue = expenseValue;
-    }
-
-    public String getExpenseCategory() {
-        return expenseCategory;
-    }
-
-    public void setExpenseCategory(String expenseCategory) {
-        this.expenseCategory = expenseCategory;
-    }
-
-    public String getExpenseDescription() {
-        return expenseDescription;
-    }
-
-    public void setExpenseDescription(String expenseDescription) {
-        this.expenseDescription = expenseDescription;
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getExpenseName() {
@@ -57,11 +48,35 @@ public class ExpenseEntity {
         this.expenseName = expenseName;
     }
 
-    public Long getId() {
-        return id;
+    public String getExpenseDescription() {
+        return expenseDescription;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public void setExpenseDescription(String expenseDescription) {
+        this.expenseDescription = expenseDescription;
+    }
+
+    public String getExpenseCategory() {
+        return expenseCategory;
+    }
+
+    public void setExpenseCategory(String expenseCategory) {
+        this.expenseCategory = expenseCategory;
+    }
+
+    public double getExpenseValue() {
+        return expenseValue;
+    }
+
+    public void setExpenseValue(double expenseValue) {
+        this.expenseValue = expenseValue;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }

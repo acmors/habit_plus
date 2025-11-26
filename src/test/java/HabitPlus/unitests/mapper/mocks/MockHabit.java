@@ -1,8 +1,8 @@
 package HabitPlus.unitests.mapper.mocks;
 import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.model.habit.HabitEntity;
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MockHabit{
@@ -38,7 +38,7 @@ public class MockHabit{
             habitEntity.setName("Name Test" + number);
             habitEntity.setPriority("Priority Test" + number);
             habitEntity.setDescription("Description Test" + number);
-            habitEntity.setDate(new Date());
+            habitEntity.setDate(LocalDate.now());
             return habitEntity;
         }
 
@@ -48,7 +48,7 @@ public class MockHabit{
             habitEntity.setName("Name Test" + number);
             habitEntity.setPriority("Priority Test" + number);
             habitEntity.setDescription("Description Test" + number);
-            habitEntity.setDate(new Date());
+            habitEntity.setDate(LocalDate.now());
             return habitEntity;
         }
 

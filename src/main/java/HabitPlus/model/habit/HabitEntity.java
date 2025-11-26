@@ -1,5 +1,7 @@
 package HabitPlus.model.habit;
 
+import HabitPlus.model.security.User;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import org.springframework.format.annotation.DateTimeFormat;
 
@@ -25,6 +27,11 @@ public class HabitEntity {
 
     @Column(name = "habit_date")
     private LocalDate date;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    @JsonIgnore
+    private User user;
 
     public HabitEntity() {
     }
@@ -67,5 +74,13 @@ public class HabitEntity {
 
     public void setDate(LocalDate date) {
         this.date = date;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
