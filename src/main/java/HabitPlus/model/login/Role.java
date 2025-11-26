@@ -1,4 +1,4 @@
-package HabitPlus.model.security;
+package HabitPlus.model.login;
 
 import jakarta.persistence.*;
 

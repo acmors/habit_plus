@@ -1,10 +1,8 @@
-package HabitPlus.model.security;
-
+package HabitPlus.model.login;
 import HabitPlus.model.finance.ExpenseEntity;
 import HabitPlus.model.finance.IncomeEntity;
 import HabitPlus.model.habit.HabitEntity;
 import jakarta.persistence.*;
-
 import java.util.Set;
 
 @Entity

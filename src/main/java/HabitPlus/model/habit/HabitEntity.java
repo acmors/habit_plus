@@ -1,12 +1,10 @@
 package HabitPlus.model.habit;
 
-import HabitPlus.model.security.User;
+import HabitPlus.model.login.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @Entity
 @Table(name = "tb_habits")

@@ -1,6 +1,6 @@
-package HabitPlus.repository.security;
+package HabitPlus.repository.login;
 
-import HabitPlus.model.security.User;
+import HabitPlus.model.login.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;

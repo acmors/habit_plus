@@ -1,6 +1,6 @@
 package HabitPlus.model.finance;
 
-import HabitPlus.model.security.User;
+import HabitPlus.model.login.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 
