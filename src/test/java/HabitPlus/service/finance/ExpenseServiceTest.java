@@ -1,6 +1,5 @@
 package HabitPlus.service.finance;
 
-import HabitPlus.DTO.finance.ExpenseDTO;
 import HabitPlus.model.finance.ExpenseEntity;
 import HabitPlus.repository.finance.ExpenseRepository;
 import HabitPlus.unitests.mapper.mocks.MockExpense;

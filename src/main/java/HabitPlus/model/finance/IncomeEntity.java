@@ -12,16 +12,16 @@ public class IncomeEntity {
     private Long id;
 
     @Column(name = "tb_name", nullable = false, length = 80)
-    private String incomeName;
+    private String name;
 
     @Column(name = "tb_description", nullable = false, length = 100)
-    private String incomeDescription;
+    private String description;
 
     @Column(name = "tb_category", nullable = false, length = 15)
-    private String incomeCategory;
+    private String category;
 
     @Column(name = "tb_value")
-    private double incomeValue;
+    private double value;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -39,36 +39,36 @@ public class IncomeEntity {
         this.id = id;
     }
 
-    public String getIncomeName() {
-        return incomeName;
+    public String getname() {
+        return name;
     }
 
-    public void setIncomeName(String incomeName) {
-        this.incomeName = incomeName;
+    public void setname(String name) {
+        this.name = name;
     }
 
-    public String getIncomeDescription() {
-        return incomeDescription;
+    public String getdescription() {
+        return description;
     }
 
-    public void setIncomeDescription(String incomeDescription) {
-        this.incomeDescription = incomeDescription;
+    public void setdescription(String description) {
+        this.description = description;
     }
 
-    public String getIncomeCategory() {
-        return incomeCategory;
+    public String getcategory() {
+        return category;
     }
 
-    public void setIncomeCategory(String incomeCategory) {
-        this.incomeCategory = incomeCategory;
+    public void setcategory(String category) {
+        this.category = category;
     }
 
-    public double getIncomeValue() {
-        return incomeValue;
+    public double getvalue() {
+        return value;
     }
 
-    public void setIncomeValue(double incomeValue) {
-        this.incomeValue = incomeValue;
+    public void setvalue(double value) {
+        this.value = value;
     }
 
     public User getUser() {

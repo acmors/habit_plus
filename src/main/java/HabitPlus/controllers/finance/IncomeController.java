@@ -1,8 +1,10 @@
 package HabitPlus.controllers.finance;
 
-import HabitPlus.DTO.finance.IncomeDTO;
+import HabitPlus.DTO.finance.IncomeRequest;
+import HabitPlus.DTO.finance.IncomeResponse;
 import HabitPlus.service.finance.IncomeService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +19,24 @@ public class IncomeController {
     private IncomeService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public IncomeDTO create(@RequestBody IncomeDTO income){
-        return service.create(income);
+    public ResponseEntity<IncomeResponse> create(@RequestBody IncomeRequest request){
+        IncomeResponse response = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
-
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public IncomeDTO update(@RequestBody IncomeDTO income){
-        return service.update(income);
+    @PutMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<IncomeResponse> update(@PathVariable("id")Long id, @RequestBody IncomeRequest request){
+        IncomeResponse response = service.update(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public IncomeDTO findById(@PathVariable("id") Long id){
-        return service.findById(id);
+    public ResponseEntity<IncomeResponse> findById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<IncomeDTO> findAll(){
-        return service.findAll();
+    public ResponseEntity<List<IncomeResponse>> findAll(){
+        return ResponseEntity.ok(service.findAll());
     }
 
     @DeleteMapping(value = "/{id}")

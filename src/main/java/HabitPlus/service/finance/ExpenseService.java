@@ -1,7 +1,9 @@
 package HabitPlus.service.finance;
-import HabitPlus.DTO.finance.ExpenseDTO;
+import HabitPlus.DTO.finance.ExpenseRequest;
+import HabitPlus.DTO.finance.ExpenseResponse;
 import HabitPlus.controllers.finance.ExpenseController;
 import HabitPlus.exceptions.BadRequestException;
+import HabitPlus.exceptions.ConflictException;
 import HabitPlus.exceptions.ObjectNotFoundException;
 import HabitPlus.model.finance.ExpenseEntity;
 import HabitPlus.repository.finance.ExpenseRepository;
@@ -9,10 +11,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.util.ArrayList;
+
 import java.util.List;
-import static HabitPlus.mapper.finance.IncomeMapper.parseListHabits;
-import static HabitPlus.mapper.finance.IncomeMapper.parseObject;
+
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
@@ -24,57 +25,65 @@ public class ExpenseService {
 
     private Logger logger = LoggerFactory.getLogger(ExpenseService.class.getName());
 
-    public ExpenseDTO create(ExpenseDTO expense){
-
+    public ExpenseResponse create(ExpenseRequest request){
         logger.info("Creating a Expense!");
+        if (request.name() == null || request.name().isBlank()) throw new BadRequestException("Habit name cannot be empty");
 
-        if (expense.getExpenseName() == null || expense.getExpenseName().isBlank()) {
-            throw new BadRequestException("Habit name cannot be empty");
-        }
+        ExpenseEntity newExpense = new ExpenseEntity();
+        newExpense.setname(request.name());
+        newExpense.setdescription(request.description());
+        newExpense.setcategory(request.category());
+        newExpense.setvalue(request.value());
+        if (repository.existsByName(newExpense.getname())) throw new ConflictException("Expense Already exists.");
 
-        var entity = parseObject(expense, ExpenseEntity.class);
-        var dto = parseObject(repository.save(entity), ExpenseDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        ExpenseEntity savedExpense = repository.save(newExpense);
+        ExpenseResponse response = convertToResponse(savedExpense);
+
+        addHateoasLinks(response);
+        return response;
     }
 
-    public ExpenseDTO update(ExpenseDTO expense){
-
+    public ExpenseResponse update(Long id, ExpenseRequest request){
         logger.info("Updating a Expense!");
-        if (expense.getExpenseName() == null || expense.getExpenseName().isBlank()) {
-            throw new BadRequestException("Habit name cannot be empty");
-        }
+        if (request.name() == null || request.name().isBlank()) throw new BadRequestException("Habit name cannot be empty");
 
-        ExpenseEntity entity = repository.findById(expense.getId())
+        ExpenseEntity entity = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
-        entity.setExpenseName(expense.getExpenseName());
-        entity.setExpenseDescription(expense.getExpenseDescription());
-        entity.setExpenseCategory(expense.getExpenseCategory());
-        entity.setExpenseValue(expense.getExpenseValue());
-        var dto = parseObject(repository.save(entity), ExpenseDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        entity.setname(request.name());
+        entity.setdescription(request.description());
+        entity.setcategory(request.category());
+        entity.setvalue(request.value());
+
+        ExpenseEntity updatedExpense = repository.save(entity);
+        ExpenseResponse response = convertToResponse(updatedExpense);
+
+        addHateoasLinks(response);
+        return response;
     }
 
-    public ExpenseDTO findById(Long id){
+    public ExpenseResponse findById(Long id){
 
         logger.info("Finding a Expense!");
 
         var entity = repository.findById(id)
                 .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
-        var dto = parseObject(entity, ExpenseDTO.class);
-        addHateoasLinks(dto);
-        return dto;
+        ExpenseResponse response = convertToResponse(entity);
+
+        addHateoasLinks(response);
+        return response;
     }
 
-    public List<ExpenseDTO> findAll(){
+    public List<ExpenseResponse> findAll(){
 
         logger.info("Finding all Expense!");
 
-        List<ExpenseDTO> habits = new ArrayList<ExpenseDTO>();
-        var dto = parseListHabits(repository.findAll(), ExpenseDTO.class);
-        dto.forEach(this::addHateoasLinks);
-        return dto;
+        List<ExpenseEntity> expenses = repository.findAll();
+        List<ExpenseResponse> responses = expenses.stream()
+                .map(this::convertToResponse)
+                .toList();
+
+        responses.forEach(this::addHateoasLinks);
+        return responses;
     }
     
     public void delete(Long id){
@@ -88,12 +97,23 @@ public class ExpenseService {
 
     }
 
-    private void addHateoasLinks(ExpenseDTO dto) {
+    private void addHateoasLinks(ExpenseResponse dto) {
         dto.add(linkTo(methodOn(ExpenseController.class).findById(dto.getId())).withSelfRel().withType("GET"));
         dto.add(linkTo(methodOn(ExpenseController.class).delete(dto.getId())).withRel("delete").withType("DELETE"));
         dto.add(linkTo(methodOn(ExpenseController.class).findAll()).withRel("findAll").withType("GET"));
-        dto.add(linkTo(methodOn(ExpenseController.class).create(dto)).withRel("create").withType("POST"));
-        dto.add(linkTo(methodOn(ExpenseController.class).update(dto)).withRel("update").withType("PUT"));
+        dto.add(linkTo(methodOn(ExpenseController.class).create(null)).withRel("create").withType("POST"));
+        dto.add(linkTo(methodOn(ExpenseController.class).update(dto.getId(), null)).withRel("update").withType("PUT"));
+    }
+
+    //DTO conversation method
+    private ExpenseResponse convertToResponse(ExpenseEntity entity){
+        return new ExpenseResponse(
+                entity.getId(),
+                entity.getname(),
+                entity.getcategory(),
+                entity.getdescription(),
+                entity.getvalue()
+        );
     }
 
 

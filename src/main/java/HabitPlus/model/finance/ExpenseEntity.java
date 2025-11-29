@@ -13,16 +13,16 @@ public class ExpenseEntity {
     private Long id;
 
     @Column(name = "tb_name", nullable = false, length = 80)
-    private String expenseName;
+    private String name;
 
     @Column(name = "tb_description", nullable = false, length = 100)
-    private String expenseDescription;
+    private String description;
 
     @Column(name = "tb_category", nullable = false, length = 15)
-    private String expenseCategory;
+    private String category;
 
     @Column(name = "tb_value")
-    private double expenseValue;
+    private double value;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -40,36 +40,36 @@ public class ExpenseEntity {
         this.id = id;
     }
 
-    public String getExpenseName() {
-        return expenseName;
+    public String getname() {
+        return name;
     }
 
-    public void setExpenseName(String expenseName) {
-        this.expenseName = expenseName;
+    public void setname(String name) {
+        this.name = name;
     }
 
-    public String getExpenseDescription() {
-        return expenseDescription;
+    public String getdescription() {
+        return description;
     }
 
-    public void setExpenseDescription(String expenseDescription) {
-        this.expenseDescription = expenseDescription;
+    public void setdescription(String description) {
+        this.description = description;
     }
 
-    public String getExpenseCategory() {
-        return expenseCategory;
+    public String getcategory() {
+        return category;
     }
 
-    public void setExpenseCategory(String expenseCategory) {
-        this.expenseCategory = expenseCategory;
+    public void setcategory(String category) {
+        this.category = category;
     }
 
-    public double getExpenseValue() {
-        return expenseValue;
+    public double getvalue() {
+        return value;
     }
 
-    public void setExpenseValue(double expenseValue) {
-        this.expenseValue = expenseValue;
+    public void setvalue(double value) {
+        this.value = value;
     }
 
     public User getUser() {

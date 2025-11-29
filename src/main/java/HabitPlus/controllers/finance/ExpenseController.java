@@ -1,8 +1,10 @@
 package HabitPlus.controllers.finance;
 
-import HabitPlus.DTO.finance.ExpenseDTO;
+import HabitPlus.DTO.finance.ExpenseRequest;
+import HabitPlus.DTO.finance.ExpenseResponse;
 import HabitPlus.service.finance.ExpenseService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,23 +19,25 @@ public class ExpenseController {
     private ExpenseService service;
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-    public ExpenseDTO create(@RequestBody ExpenseDTO expense){
-        return service.create(expense);
+    public ResponseEntity<ExpenseResponse> create(@RequestBody ExpenseRequest request){
+        ExpenseResponse response = service.create(request);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
-    @PutMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ExpenseDTO update(@RequestBody ExpenseDTO expense){
-        return service.update(expense);
+    @PutMapping(value = "/{id}",consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<ExpenseResponse> update(@PathVariable("id") Long id, @RequestBody ExpenseRequest request){
+        ExpenseResponse response = service.update(id, request);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ExpenseDTO findById(@PathVariable("id") Long id){
-        return service.findById(id);
+    public ResponseEntity<ExpenseResponse> findById(@PathVariable("id") Long id){
+        return ResponseEntity.ok(service.findById(id));
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<ExpenseDTO> findAll(){
-        return service.findAll();
+    public ResponseEntity<List<ExpenseResponse>> findAll(){
+        return ResponseEntity.ok(service.findAll());
     }
 
     @DeleteMapping(value = "/{id}")
