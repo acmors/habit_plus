@@ -1,9 +1,7 @@
 package HabitPlus.service.finance;
 
 import HabitPlus.DTO.finance.ExpenseDTO;
-import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.model.finance.ExpenseEntity;
-import HabitPlus.model.habit.HabitEntity;
 import HabitPlus.repository.finance.ExpenseRepository;
 import HabitPlus.unitests.mapper.mocks.MockExpense;
 import org.junit.jupiter.api.BeforeEach;

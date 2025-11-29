@@ -1,8 +1,11 @@
 package HabitPlus.model.login;
+import HabitPlus.DTO.login.LoginRequest;
 import HabitPlus.model.finance.ExpenseEntity;
 import HabitPlus.model.finance.IncomeEntity;
 import HabitPlus.model.habit.HabitEntity;
 import jakarta.persistence.*;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
 import java.util.Set;
 
 @Entity
@@ -91,5 +94,9 @@ public class User {
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+
+    public boolean isLoginCorrect(LoginRequest loginRequest, PasswordEncoder passwordEncoder) {
+        return passwordEncoder.matches(loginRequest.password(), this.password);
     }
 }

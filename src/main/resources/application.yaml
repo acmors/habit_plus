@@ -13,3 +13,9 @@ spring:
       hibernate:
     show-sql: false
     open-in-view: false
+
+  jwt:
+    public:
+      key: classpath:app.pub
+    private:
+      key: classpath:app.key

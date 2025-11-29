@@ -1,6 +1,5 @@
 package HabitPlus.service.habit;
 
-import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.model.habit.HabitEntity;
 import HabitPlus.repository.habit.HabitRepository;
 import HabitPlus.unitests.mapper.mocks.MockHabit;

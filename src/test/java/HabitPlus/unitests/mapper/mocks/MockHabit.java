@@ -1,5 +1,4 @@
 package HabitPlus.unitests.mapper.mocks;
-import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.model.habit.HabitEntity;
 import java.time.LocalDate;
 import java.util.ArrayList;

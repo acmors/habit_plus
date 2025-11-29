@@ -1,12 +1,9 @@
 package HabitPlus.unitests.mapper.mocks;
 
 import HabitPlus.DTO.finance.ExpenseDTO;
-import HabitPlus.DTO.habit.HabitDTO;
 import HabitPlus.model.finance.ExpenseEntity;
-import HabitPlus.model.habit.HabitEntity;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 public class MockExpense {
