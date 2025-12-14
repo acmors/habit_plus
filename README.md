@@ -101,7 +101,7 @@ A aplicação está atualmente em **Produção** com deploy contínuo:
 
 | Recurso | URL |
 | :--- | :--- |
-| **URL Base da API** | `https://habit-plus-ql4i.onrender.com/api` |
+| **URL Base da API** | `[https://habit-plus-ql4i.onrender.com/api](https://habit-plus-ql4i.onrender.com)` |
 
 ---
 
