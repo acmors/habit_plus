@@ -80,7 +80,7 @@ src/main/java/br/com/habitplus/
     spring.datasource.password=sua_senha_db
     
     # Chave secreta forte para assinatura do JWT
-    spring.jwt.secret=SUA_CHAVE_SECRETA_MUITO_FORTE_E_LONGA_AQUI
+    spring.jwt.secret=SUA_CHAVE_SECRETA
     ```
 
 3.  **Executar a Aplicação:**
@@ -101,7 +101,7 @@ A aplicação está atualmente em **Produção** com deploy contínuo:
 
 | Recurso | URL |
 | :--- | :--- |
-| **URL Base da API** | `[https://habit-plus-ql4i.onrender.com/api](https://habit-plus-ql4i.onrender.com)` |
+| 🔗 **Swagger UI:** [Acessar a Documentação Interativa](https://habit-plus-ql4i.onrender.com/swagger-ui/index.html#)|
 
 ---
 
