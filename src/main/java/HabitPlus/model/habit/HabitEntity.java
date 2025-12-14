@@ -1,7 +1,8 @@
 package HabitPlus.model.habit;
 
-import HabitPlus.model.login.User;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import HabitPlus.model.user.User;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 
 import java.time.LocalDate;
@@ -17,18 +18,22 @@ public class HabitEntity {
     @Column(name = "habit_name",length = 80)
     private String name;
 
-    @Column(name = "habit_priority",length = 8)
-    private String priority;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "habit_priority")
+    private Priority priority;
 
     @Column(name = "habit_description",length = 100)
     private String description;
 
+    @Column(name="habit_status")
+    private boolean status;
+
+    @JsonFormat(pattern = "dd/mm/YYYY")
     @Column(name = "habit_date")
     private LocalDate date;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     public HabitEntity() {
@@ -50,11 +55,11 @@ public class HabitEntity {
         this.name = name;
     }
 
-    public String getPriority() {
+    public Priority getPriority() {
         return priority;
     }
 
-    public void setPriority(String priority) {
+    public void setPriority(Priority priority) {
         this.priority = priority;
     }
 
@@ -64,6 +69,14 @@ public class HabitEntity {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public boolean isStatus() {
+        return status;
+    }
+
+    public void setStatus(boolean status) {
+        this.status = status;
     }
 
     public LocalDate getDate() {
@@ -81,4 +94,5 @@ public class HabitEntity {
     public void setUser(User user) {
         this.user = user;
     }
+
 }

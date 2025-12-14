@@ -1,8 +1,12 @@
 package HabitPlus.DTO.finance;
 
+import HabitPlus.model.finance.IncomeCategory;
+
+import java.math.BigDecimal;
+
 public record IncomeRequest(
         String name,
         String description,
-        String category,
-        double value) {
+        IncomeCategory category,
+        BigDecimal value) {
 }

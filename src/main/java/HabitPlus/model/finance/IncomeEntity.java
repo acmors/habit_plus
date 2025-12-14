@@ -1,7 +1,10 @@
 package HabitPlus.model.finance;
-import HabitPlus.model.login.User;
+
+import HabitPlus.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_income")
@@ -11,21 +14,21 @@ public class IncomeEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tb_name", nullable = false, length = 80)
+    @Column(name = "name", nullable = false, length = 80)
     private String name;
 
-    @Column(name = "tb_description", nullable = false, length = 100)
+    @Column(name = "description", nullable = false)
     private String description;
 
-    @Column(name = "tb_category", nullable = false, length = 15)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false)
+    private IncomeCategory category;
 
-    @Column(name = "tb_value")
-    private double value;
+    @Column(name = "value")
+    private BigDecimal value;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     public IncomeEntity() {
@@ -39,35 +42,35 @@ public class IncomeEntity {
         this.id = id;
     }
 
-    public String getname() {
+    public String getName() {
         return name;
     }
 
-    public void setname(String name) {
+    public void setName(String name) {
         this.name = name;
     }
 
-    public String getdescription() {
+    public String getDescription() {
         return description;
     }
 
-    public void setdescription(String description) {
+    public void setDescription(String description) {
         this.description = description;
     }
 
-    public String getcategory() {
+    public IncomeCategory getCategory() {
         return category;
     }
 
-    public void setcategory(String category) {
+    public void setCategory(IncomeCategory category) {
         this.category = category;
     }
 
-    public double getvalue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setvalue(double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 

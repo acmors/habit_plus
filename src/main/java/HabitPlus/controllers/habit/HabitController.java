@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/habits/v1")
+@RequestMapping("/api/v1/habit")
 public class HabitController {
 
     @Autowired

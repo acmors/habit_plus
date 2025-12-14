@@ -1,8 +1,12 @@
 package HabitPlus.DTO.habit;
+import HabitPlus.model.habit.Priority;
+import HabitPlus.model.user.User;
+
 import java.time.LocalDate;
 
 public record HabitRequest(String name,
-                           String priority,
+                           Priority priority,
                            String description,
-                           LocalDate date) {
+                           LocalDate date,
+                           User user) {
 }

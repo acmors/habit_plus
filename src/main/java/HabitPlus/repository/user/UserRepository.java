@@ -1,11 +1,10 @@
-package HabitPlus.repository.login;
+package HabitPlus.repository.user;
 
-import HabitPlus.model.login.User;
+import HabitPlus.model.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    Optional<User> findByUsername(String username);
+    Optional<User> findUserByEmail(String email);
 }

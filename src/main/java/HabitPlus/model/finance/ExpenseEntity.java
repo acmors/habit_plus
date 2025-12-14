@@ -1,8 +1,10 @@
 package HabitPlus.model.finance;
 
-import HabitPlus.model.login.User;
+import HabitPlus.model.user.User;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.math.BigDecimal;
 
 @Entity
 @Table(name = "tb_expense")
@@ -12,21 +14,21 @@ public class ExpenseEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "tb_name", nullable = false, length = 80)
+    @Column(name = "name", nullable = false, length = 80)
     private String name;
 
-    @Column(name = "tb_description", nullable = false, length = 100)
+    @Column(name = "description", nullable = false, length = 100)
     private String description;
 
-    @Column(name = "tb_category", nullable = false, length = 15)
-    private String category;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "category", nullable = false, length = 15)
+    private ExpenseCategory category;
 
-    @Column(name = "tb_value")
-    private double value;
+    @Column(name = "value")
+    private BigDecimal value;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
-    @JsonIgnore
     private User user;
 
     public ExpenseEntity() {
@@ -40,43 +42,43 @@ public class ExpenseEntity {
         this.id = id;
     }
 
-    public String getname() {
-        return name;
-    }
-
-    public void setname(String name) {
-        this.name = name;
-    }
-
-    public String getdescription() {
-        return description;
-    }
-
-    public void setdescription(String description) {
-        this.description = description;
-    }
-
-    public String getcategory() {
-        return category;
-    }
-
-    public void setcategory(String category) {
-        this.category = category;
-    }
-
-    public double getvalue() {
-        return value;
-    }
-
-    public void setvalue(double value) {
-        this.value = value;
-    }
-
     public User getUser() {
         return user;
     }
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public BigDecimal getValue() {
+        return value;
+    }
+
+    public void setValue(BigDecimal value) {
+        this.value = value;
+    }
+
+    public ExpenseCategory getCategory() {
+        return category;
+    }
+
+    public void setCategory(ExpenseCategory category) {
+        this.category = category;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

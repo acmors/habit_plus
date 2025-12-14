@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/income/v1")
+@RequestMapping("/api/v1/income")
 public class IncomeController {
 
     @Autowired

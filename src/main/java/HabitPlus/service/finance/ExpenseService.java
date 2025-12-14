@@ -1,12 +1,16 @@
 package HabitPlus.service.finance;
 import HabitPlus.DTO.finance.ExpenseRequest;
 import HabitPlus.DTO.finance.ExpenseResponse;
+import HabitPlus.config.AuthenticatedUser;
 import HabitPlus.controllers.finance.ExpenseController;
 import HabitPlus.exceptions.BadRequestException;
 import HabitPlus.exceptions.ConflictException;
 import HabitPlus.exceptions.ObjectNotFoundException;
 import HabitPlus.model.finance.ExpenseEntity;
+import HabitPlus.model.user.Role;
+import HabitPlus.model.user.User;
 import HabitPlus.repository.finance.ExpenseRepository;
+import jakarta.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,18 +27,24 @@ public class ExpenseService {
     @Autowired
     private ExpenseRepository repository;
 
+    @Autowired
+    private AuthenticatedUser authenticatedUser;
+
     private Logger logger = LoggerFactory.getLogger(ExpenseService.class.getName());
 
     public ExpenseResponse create(ExpenseRequest request){
         logger.info("Creating a Expense!");
-        if (request.name() == null || request.name().isBlank()) throw new BadRequestException("Habit name cannot be empty");
+        User user = authenticatedUser.get();
+
+        if (request.name() == null || request.name().isBlank()) throw new BadRequestException("Expense name cannot be empty");
 
         ExpenseEntity newExpense = new ExpenseEntity();
-        newExpense.setname(request.name());
-        newExpense.setdescription(request.description());
-        newExpense.setcategory(request.category());
-        newExpense.setvalue(request.value());
-        if (repository.existsByName(newExpense.getname())) throw new ConflictException("Expense Already exists.");
+        newExpense.setName(request.name());
+        newExpense.setDescription(request.description());
+        newExpense.setCategory(request.category());
+        newExpense.setValue(request.value());
+        newExpense.setUser(user);
+        if (repository.existsByNameAndUser(newExpense.getName(), user)) throw new ConflictException("Expense Already exists.");
 
         ExpenseEntity savedExpense = repository.save(newExpense);
         ExpenseResponse response = convertToResponse(savedExpense);
@@ -43,16 +53,26 @@ public class ExpenseService {
         return response;
     }
 
+    @Transactional
     public ExpenseResponse update(Long id, ExpenseRequest request){
         logger.info("Updating a Expense!");
+        User user = authenticatedUser.get();
+
         if (request.name() == null || request.name().isBlank()) throw new BadRequestException("Habit name cannot be empty");
 
-        ExpenseEntity entity = repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
-        entity.setname(request.name());
-        entity.setdescription(request.description());
-        entity.setcategory(request.category());
-        entity.setvalue(request.value());
+        ExpenseEntity entity;
+        if (user.getRole() == Role.ADMIN){
+            entity = repository.findById(id)
+                    .orElseThrow(() -> new ObjectNotFoundException("Expense not found."));
+        }else {
+            entity = repository.findByIdAndUser(id, user)
+                    .orElseThrow(() -> new ObjectNotFoundException("Expense not found."));
+        }
+
+        entity.setName(request.name());
+        entity.setDescription(request.description());
+        entity.setCategory(request.category());
+        entity.setValue(request.value());
 
         ExpenseEntity updatedExpense = repository.save(entity);
         ExpenseResponse response = convertToResponse(updatedExpense);
@@ -64,11 +84,13 @@ public class ExpenseService {
     public ExpenseResponse findById(Long id){
 
         logger.info("Finding a Expense!");
+        User user = authenticatedUser.get();
 
-        var entity = repository.findById(id)
+        var entity = repository
+                .findByIdAndUser(id, user)
                 .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
-        ExpenseResponse response = convertToResponse(entity);
 
+        ExpenseResponse response = convertToResponse(entity);
         addHateoasLinks(response);
         return response;
     }
@@ -76,8 +98,18 @@ public class ExpenseService {
     public List<ExpenseResponse> findAll(){
 
         logger.info("Finding all Expense!");
+        User user = authenticatedUser.get();
 
-        List<ExpenseEntity> expenses = repository.findAll();
+        List<ExpenseEntity> expenses;
+
+        if (user.getRole() == Role.ADMIN) {
+            logger.info("Admin role detected. Finding all existing Expenses.");
+            expenses = repository.findAll();
+        }else {
+            logger.info("User role detected. Finding Expenses for user: {}", user.getUsername());
+            expenses = repository.findByUser(user);
+        }
+
         List<ExpenseResponse> responses = expenses.stream()
                 .map(this::convertToResponse)
                 .toList();
@@ -85,13 +117,22 @@ public class ExpenseService {
         responses.forEach(this::addHateoasLinks);
         return responses;
     }
-    
+
+    @Transactional
     public void delete(Long id){
 
-        logger.info("Deleting a Expense!");
+        logger.info("Deleting an Expense!");
+        User user = authenticatedUser.get();
 
-        ExpenseEntity entity = repository.findById(id)
-                .orElseThrow(() -> new ObjectNotFoundException("Expense not found"));
+        ExpenseEntity entity;
+
+        if (user.getRole() == Role.ADMIN){
+            entity = repository.findById(id)
+                    .orElseThrow(() -> new ObjectNotFoundException("Expense not found."));
+        }else{
+            entity = repository.findByIdAndUser(id, user)
+                    .orElseThrow(() -> new ObjectNotFoundException("Expense not found."));
+        }
 
         repository.delete(entity);
 
@@ -109,10 +150,10 @@ public class ExpenseService {
     private ExpenseResponse convertToResponse(ExpenseEntity entity){
         return new ExpenseResponse(
                 entity.getId(),
-                entity.getname(),
-                entity.getcategory(),
-                entity.getdescription(),
-                entity.getvalue()
+                entity.getName(),
+                entity.getDescription(),
+                entity.getCategory(),
+                entity.getValue()
         );
     }
 
