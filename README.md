@@ -103,6 +103,10 @@ A aplicação está atualmente em **Produção** com deploy contínuo:
 | :--- | :--- |
 | 🔗 **Swagger UI:** [Acessar a Documentação Interativa](https://habit-plus-ql4i.onrender.com/swagger-ui/index.html#)|
 
+Caso deseje testar um usuário ADMIN
+email: adm@adm.com
+password: admin1234
+
 ---
 
 ## 📋 Guia de Endpoints (Exemplos)
